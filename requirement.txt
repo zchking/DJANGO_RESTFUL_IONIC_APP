@@ -1,0 +1,16 @@
+Django==1.7.1
+jsonfield
+bootstrap-admin==0.3.3
+django-admin-bootstrapped==2.3.2
+django-debug-toolbar==1.2.2
+django-grappelli==2.6.3
+django-xadmin==0.5.0
+djangorestframework==3.0.0
+djoser
+django-filter
+django-cors-headers
+pytz
+gunicorn
+ipython
+uWSGI
+Pillow

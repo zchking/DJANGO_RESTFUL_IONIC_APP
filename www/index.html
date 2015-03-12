@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link href="css/ionic.app.css" rel="stylesheet">
+    <link href="lib/angular-ui-select/dist/select.css" rel="stylesheet">
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.min.js"></script>
+
+    <!-- Angular extra -->
+    <script src="lib/angular/angular-cookies.js"></script>
+    <script src="lib/angular/angular-messages.js"></script>
+
+    <!-- ionic services -->
+    <script src="lib/ionic-service-update/ionicUpdate.js"></script>
+    <!--<script src="lib/ionic-service-analytics/ionic-analytics.js"></script>-->
+    <script src="lib/ionic-service-common/ionicCore.js"></script>
+    <script src="lib/http-auth-interceptor.js"></script>
+    <script src="lib/angular-input-match.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <!--<script src="cordova.js"></script> -->
+
+    <!-- your app's js -->
+    <!--<script src="js/config.js"></script>-->
+    <script src="js/dist/app-all.js"></script>
+
+    <!-- 3rd party lib -->
+    <script src="lib/angular-loading-bar/build/loading-bar.js"></script>
+    <script src="lib/firebase/firebase.js"></script>
+    <script src="lib/angularfire/dist/angularfire.min.js"></script>
+    <script src="lib/moment/min/moment-with-locales.min.js"></script>
+    <script src="lib/angular-file-upload/angular-file-upload.js"></script>
+    <script src="lib/angular-ui-select/dist/select.js"></script>
+    <script>moment.locale('zh-cn')</script>
+
+  </head>
+  <body ng-app="frontpage" ion-track-auto ng-controller="MainCtrl">
+
+    <ion-nav-bar class="bar-energized">
+      <ion-nav-back-button></ion-nav-back-button>
+    </ion-nav-bar>
+
+    <!--
+      The views will be rendered in the <ion-nav-view> directive below
+      Templates are in the /templates folder (but you could also
+      have templates inline in this html file if you'd like).
+    -->
+    <ion-nav-view></ion-nav-view>
+    <script>
+        getLocation();
+
+        //"31.2486751659,121.4852022057"
+        //上海市虹口区四川北路852号
+
+        //百度坐标转换封装
+        (function(){        //闭包
+            function load_script(xyUrl, callback){
+                var head = document.getElementsByTagName('head')[0];
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = xyUrl;
+                //借鉴了jQuery的script跨域方法
+                script.onload = script.onreadystatechange = function(){
+                    if((!this.readyState || this.readyState === "loaded" || this.readyState === "complete")){
+                        callback && callback();
+                        // Handle memory leak in IE
+                        script.onload = script.onreadystatechange = null;
+                        if ( head && script.parentNode ) {
+                            head.removeChild( script );
+                        }
+                    }
+                };
+                // Use insertBefore instead of appendChild  to circumvent an IE6 bug.
+                head.insertBefore( script, head.firstChild );
+            }
+            function translate(point,type,callback){
+                var callbackName = 'cbk_' + Math.round(Math.random() * 10000);    //随机函数名
+                var xyUrl = "http://api.map.baidu.com/ag/coord/convert?from="+ type + "&to=4&x=" + point.lng + "&y=" + point.lat + "&callback=BMap.Convertor." + callbackName;
+                //动态创建script标签
+                load_script(xyUrl);
+                BMap.Convertor[callbackName] = function(xyResult){
+                    delete BMap.Convertor[callbackName];    //调用完需要删除改函数
+                    var point = new BMap.Point(xyResult.x, xyResult.y);
+                    callback && callback(point);
+                }
+            }
+
+            window.BMap = window.BMap || {};
+            BMap.Convertor = {};
+            BMap.Convertor.translate = translate;
+        })();
+
+
+        function getLocation(){
+            if(navigator.geolocation){
+
+                navigator.geolocation.getCurrentPosition(locationSuccess, locationError,{
+                    // 指示浏览器获取高精度的位置，默认为false
+                    enableHighAcuracy: true,
+                    // 指定获取地理位置的超时时间，默认不限时，单位为毫秒
+                    timeout: 5000,
+                    // 最长有效期，在重复获取地理位置时，此参数指定多久再次获取位置。
+                    maximumAge: 3000
+                });
+            }else{
+                alert("您的浏览器不支持地理定位");
+            }
+        }
+
+        function locationSuccess(position){
+            lat=position.coords.latitude;
+            lon=position.coords.longitude;
+            //var map = new BMap.Map("container");            // 创建Map实例
+            var point = new BMap.Point(lon, lat);    // 创建点坐标
+            BMap.Convertor.translate(point,2,function(point){
+                var gc = new BMap.Geocoder();
+                gc.getLocation(point, function(rs){
+                    var addComp = rs.addressComponents;
+                    window.userArea = addComp;
+                    alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street);
+                });
+            });
+        }
+
+        function locationError(error){
+            switch(error.code) {
+                case error.TIMEOUT:
+                    console.log("A timeout occured! Please try again!");
+                break;
+                case error.POSITION_UNAVAILABLE:
+                    console.log('We can\'t detect your location. Sorry!');
+                break;
+                case error.PERMISSION_DENIED:
+                    console.log('Please allow geolocation access for this to work.');
+                break;
+                case error.UNKNOWN_ERROR:
+                    console.log('An unknown error occured!');
+                break;
+            }
+        }
+
+    </script>
+  </body>
+</html>

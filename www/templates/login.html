@@ -1,0 +1,33 @@
+<ion-view view-title="登录宝库">
+    <ion-nav-buttons side="secondary">
+        <button ui-sref="register" class="button icon icon-right ion-person-add">新手注册</button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header">
+        <form ng-submit="login()">
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">用户名</span>
+                <input required type="text" ng-model="authData.username">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">密码</span>
+                <input required type="password" ng-model="authData.password">
+            </label>
+        </div>
+
+        <!-- display errors from server -->
+        <div ng-messages="serverError">
+            <div ng-message="non_field_errors" class="assertive padding">用户名或密码输入有误，请重试。</div>
+        </div>
+
+        <div class="padding">
+            <button class="button button-block button-energized">
+                登陆
+            </button>
+            <!--<p class="text-center"><a href="#/forgot-password">忘记密码?</a></p>-->
+        </div>
+
+        </form>
+    </ion-content>
+</ion-view>

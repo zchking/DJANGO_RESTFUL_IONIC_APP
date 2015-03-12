@@ -1,0 +1,29 @@
+<!-- 产品概览, 用于list视图(比如产品查找, 我的收藏, 我的产品) -->
+<div class="hproduct">
+    <a ui-sref="product-detail({id:product.id})" class="">
+        <p class="cover">
+            <img ng-if="product.images[0]" ng-src="{{productImageURLPrefix}}{{product.images[0]}}" />
+            <img ng-if="!product.images[0]" src="img/ionic.png" />
+        </p>
+        <p class="fn">{{product.title}}</p>
+        <p class="prices">
+            <strong ><em>¥{{product.price|number:2}}</em></strong>
+            <small class="cancel-line fc-gray">¥{{product.cost|number:2}}</small>
+        </p>
+        <p class="sku">
+            <span class="product-area">
+                <span ng-if="product.address.parent">{{product.address.parent.name}}-</span>{{product.address.name}}
+            </span>
+            <span class="product-time">{{product.pubdate|timeAgo}}</span>
+            <span ng-if="product.completed" class="product-badge-completed">
+                已成交
+            </span>
+            <span ng-if="!product.completed && !product.public" class="product-badge-off">
+                已下架
+            </span>
+            <span ng-if="!product.passed" class="product-badge-reviewing">
+                审核中
+            </span>
+        </p>
+    </a>
+</div>

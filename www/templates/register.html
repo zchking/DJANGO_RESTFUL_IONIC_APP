@@ -1,0 +1,91 @@
+<ion-view view-title="新手注册">
+    <ion-nav-buttons side="secondary">
+        <button ui-sref="login" class="button">登陆</button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header">
+        <form name="form" ng-submit="form.$valid && submit()" novalidate>
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">用户名</span>
+                <input required type="text" name="username" ng-model="registerData.username">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">密码</span>
+                <input required type="password" name="password" ng-model="registerData.password">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">密码确认</span>
+                <input required type="password" name="passwordConfirm" match="form.password"
+                ng-model="authData.passwordConfirm">
+            </label>
+            <!--p ng-show="form.password.$dirty && form.passwordConfirm.$dirty
+                && form.password.$viewValue != form.passwordConfirm.$viewValue"
+                class="assertive padding">
+                两次输入的密码不一致
+            </p-->
+            <div ng-show="form.passwordConfirm.$error.match" class="assertive padding">
+                请再次输入相同密码
+            </div>
+
+            <div class="item item-checkbox">
+                <div class="checkbox" style="z-index:-1">
+                    <input type="checkbox" required="required"
+                    name="noticeConfirm" ng-model="registerData.noticeConfirm">
+                </div>
+                <span>已阅读<a class="positive" ng-click="showAgreement()">免责申明</a></span>
+            </div>
+            <div ng-show="form.$dirty && form.noticeConfirm.$error.required" class="assertive padding">
+                请确认阅读免责申明
+            </div>
+
+        </div>
+        <div class="padding">
+            <button class="button button-block button-energized">
+                立即注册
+            </button>
+        </div>
+        </form>
+    </ion-content>
+</ion-view>
+
+<script id="agreement.html" type="text/ng-template">
+<ion-modal-view>
+    <div class="bar bar-header">
+        <button type="button" class="button button-clear" ng-click="hideAgreement()">
+            <i class="icon ion-ios-arrow-back"></i>
+        </button>
+        <h1 class="title">盘活互惠联盟服务协议</h1>
+    </div>
+    <ion-content class="has-header">
+        <pre class="padding" ng-include="'templates/snippets/agreement.txt'"></pre>
+    </ion-content>
+    <div class="bar bar-footer bar-energized">
+        <div ng-click="hideAgreement()" class="title">确定</div>
+    </div>
+</ion-modal-view>
+</script>
+
+<script id="register-success.html" type="text/ng-template">
+<ion-modal-view>
+    <div class="bar bar-header bar-energized">
+        <h1 class="title">注册成功！</h1>
+    </div>
+
+    <ion-content class="has-header">
+        <div class="padding">
+            <p class="text-center">扫码关注“盘活互惠联盟”</p>
+            <p class="text-center">盘活&扫码一网打进</p>
+        </div>
+        <div class="text-center">
+            <img src="img/qrcode.jpg" alt="盘活互惠联盟"/>
+        </div>
+
+        <div class="padding">
+            <button class="button button-energized button-block"
+                ng-click="OK()">确定
+            </button>
+        </div>
+    </ion-content>
+</ion-modal-view>
+</script>

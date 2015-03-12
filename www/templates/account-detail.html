@@ -1,0 +1,65 @@
+<ion-view view-title="我的信息">
+    <ion-nav-buttons side="secondary">
+        <button ng-hide="operation.editing" ng-click="operation.editing = !operation.editing" class="button icon icon-right">编辑</button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header">
+        <form name="form" novalidate ng-submit="submit()">
+
+        <!-- TODO: 头像展示&修改 -->
+
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">店铺名</span>
+                <input ng-readonly="!operation.editing" required type="text"
+                name="shop_name" ng-model="user.shop_name"
+                placeholder="给你的盘子起个名字吧">
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">微信号</span>
+                <input ng-readonly="!operation.editing" required type="text"
+                name="weixin_id" ng-model="user.weixin_id">
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">微信暗号</span>
+                <input ng-readonly="!operation.editing" required type="text"
+                name="weixin_id" ng-model="user.weixin_veri_mark"
+                placeholder="添加微信好友时发送暗号">
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">手机号</span>
+                <input ng-readonly="!operation.editing"
+                required type="tel" pattern="[0-9]+"
+                name="phone_number" ng-model="user.phone_number">
+            </label>
+            <div ng-if="operation.editing && form.$dirty" ng-messages="form.phone_number.$error">
+                <div ng-message="required" class="assertive padding">请输入手机号</div>
+                <div ng-message="pattern" class="assertive padding">手机号格式错误</div>
+            </div>
+
+            <label class="item item-input">
+                <span class="input-label">地址</span>
+                <span ng-hide="operation.editing">{{operation.selectedArea.name}}</span>
+                <input ng-show="operation.editing" placeholder="地区关键词, 如: 黄浦区" type="text"
+                ng-model="operation.areaSearchText" debounce=2000>
+            </label>
+            <label ng-show="operation.editing && areas.length" class="item item-input">
+                <span class="input-label"></span>
+                <select required ng-model="user.address"
+                    ng-options="area.id as area.name for area in areas">
+                </select>
+            </label>
+        </div>
+        <div class="padding">
+            <button class="button button-block button-energized"
+                ng-show="operation.editing"
+                ng-click="form.$valid && (operation.editing = !operation.editing)">
+                保存
+            </button>
+        </div>
+        </form>
+    </ion-content>
+</ion-view>

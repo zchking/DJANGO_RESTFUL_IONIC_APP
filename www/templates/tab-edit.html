@@ -1,0 +1,234 @@
+<ion-view cache-view="false" title="编辑产品">
+    <ion-content class="has-header">
+        <form ng-submit="publish()">
+            <!-- 图片上传 -->
+            <div class="form-pic" data-type="jpg,jpeg,bmp,gif,png">
+                <div class="f12 lh40 plr10">
+                    还可上传 <span class="f14 fc-green">{{remainingImgsAmount()}}</span>
+                    张图片（已上传<span class="f14 fc-green">{{uploadedImgsCount()}}</span>张）
+                </div>
+                <ul class="pic-group">
+                    <li ng-if="remainingImgsAmount() > 0">
+                        <label class="btn-file">
+                            <img src="img/upimg.png">
+                            <input name="image" type="file" accept="image/*"
+                            nv-file-select uploader="uploader"/>
+                        </label>
+                    </li>
+                    <li ng-repeat="item in uploader.queue"
+                        ng-class="{loading:(item.isUploading||item.isReady)}">
+                        <div ng-show="uploader.isHTML5"
+                            title="{{item.file.name}},{{item.file.realname}}"
+                            ng-thumb="{file:item._file, width:100, height:90}">
+                         </div>
+                         <span class="remove" ng-click="removeImageFromQueue(item)"></span>
+                    </li>
+
+                    <li ng-repeat="image in product.original_images">
+                        <!--<span class="energized">{{image}}</span>-->
+                        <img ng-src="{{productImageURLPrefix}}{{image}}" alt="{{image}}"/>
+                         <span class="remove" ng-click="removeImageFromProduct(image)"></span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">物品名</label>
+                    <div class="form-control">
+                        <label class="input-group">
+                            <input required type="text" ng-model="product.title" class="input-text" placeholder="物品品牌型号等，6-30字">
+                        </label>
+                    </div>
+                </div>
+                <div class="form-warning"></div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">分类</label>
+                    <div class="form-control">
+                        <span class="input-group">
+                            <!-- 顶层分类 -->
+                            <select
+                                ng-model="selectedCategories[0]"
+                                ng-options="c as c.name for c in categories">
+                            </select>
+
+                            <!-- 二级分类 -->
+                            <select
+                                ng-if="selectedCategories[0].children.length"
+                                ng-model="selectedCategories[1]"
+                                ng-options="c as c.name for c in selectedCategories[0].children">
+                            </select>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-warning"></div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">新旧</label>
+                    <div class="form-control">
+                        <label class="input-group">
+                            <select ng-model="product.oldornew"
+                                ng-options="c.value as c.display_name for c in productSchema.oldornew.choices">
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-warning"></div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">卖出价格</label>
+                    <div class="form-control">
+                        <label class="input-group">
+                            <input required type="text" ng-model="product.price"
+                            pattern="^(\d+)?(\.\d+)?$"
+                            placeholder="必填，大于0的数字" class="input-text" />
+                        </label>
+                    </div>
+                </div>
+                <div class="form-warning"></div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">原始价格</label>
+                    <div class="form-control">
+                        <label class="input-group">
+                            <input required type="text" ng-model="product.cost"
+                            pattern="^(\d+)?(\.\d+)?$"
+                            placeholder="必填，大于0的数字" class="input-text" />
+                        </label>
+                    </div>
+                </div>
+                <div class="form-warning"></div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">物品来源</label>
+                    <div class="form-control">
+                        <label class="input-group">
+                            <select ng-model="product.source"
+                                ng-options="c.value as c.display_name for c in productSchema.source.choices">
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-warning"></div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">品牌型号</label>
+                    <div class="form-control">
+                        <label class="input-group">
+                            <input required type="text" ng-model="product.brand"
+                            class="input-text" />
+                        </label>
+                    </div>
+                </div>
+                <div class="form-warning"></div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">有否凭证</label>
+                    <div class="form-control">
+                        <!--<input required type="text" ng-model="product.hascert" class="input-text" />-->
+                        <label class="checkbox checkbox-positive">
+                            <input ng-model="product.hascert" type="checkbox">
+                        </label>
+                    </div>
+                </div>
+                <div class="form-warning"></div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">保质期</label>
+                    <div class="form-control">
+                        <label class="input-group">
+                            <input type="text" ng-model="product.qgp"
+                            class="input-text" />
+                        </label>
+                    </div>
+                </div>
+                <div class="form-warning"></div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">盘出原因</label>
+                    <div class="form-control">
+                        <label class="input-group">
+                            <input required type="text" ng-model="product.reason"
+                            class="input-text" />
+                        </label>
+                    </div>
+                </div>
+                <div class="form-warning"></div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">物品描述</label>
+                    <div class="form-control">
+                        <textarea ng-model="product.content" class="textarea" placeholder="选填，物品状况、交易方式、转让原因等，10-800字"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!--div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">联系人</label>
+                    <div class="form-control">
+                        <label class="input-group">
+                            <input type="text" name="person" placeholder="2-6个汉字或英文" class="input-text">
+                        </label>
+                    </div>
+                </div>
+                <div class="form-warning"></div>
+            </div-->
+
+            <div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">所在区域</label>
+                    <div class="form-control">
+                        <label class="input-group">
+                            <select ng-model="product.address.id"
+                                ng-options="a.id as a.name for a in areaTree.children">
+                            </select>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-group">
+                    <label class="form-label">手机号</label>
+                    <div class="form-control">
+                        <div class="form-row3">
+                            <span>{{user.phone_number}}</span>
+                            <!--label class="input-group">
+                                <input type="tel" name="phone" placeholder="手机号"
+                                ng-model="product.owner.phone_number"
+                                pattern="[0-9]+" class="input-text">
+                            </label-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="padding">
+                <button class="button button-block button-energized">直接发布</button>
+            </div>
+
+        </form>
+    </ion-content>
+</ion-view>

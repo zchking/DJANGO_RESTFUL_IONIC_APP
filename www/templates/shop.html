@@ -1,0 +1,37 @@
+<ion-view>
+    <ion-nav-title>{{owner.shop_name || owner.username+'的盘子'}}</ion-nav-title>
+
+    <ion-nav-buttons side="left">
+        <button class="button icon icon-left ion-ios-arrow-back"
+            ng-if="isTopOfCurrentHistory()" ui-sref="tab.products">宝库寻宝
+        </button>
+    </ion-nav-buttons>
+
+    <ion-nav-buttons side="secondary">
+        <button class="button icon icon-right ion-plus-circled" ui-sref="tab.add-product">上架新品</button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header">
+        <ion-list>
+            <ion-item class="mama-item" collection-repeat="product in products"
+                collection-item-width="'100%'" collection-item-height="'120px'">
+                <ng-include src="'templates/snippets/product-overview.html'"></ng-include>
+                <ion-option-button ng-if="isMineShop()" class="button-energized" ui-sref="tab.edit-product({id:product.id})">
+                    编辑
+                </ion-option-button>
+                <ion-option-button ng-if="isMineShop() && isOnShelve(product)"
+                    class="button-energized" ng-click="takeOff(product)">
+                    下架
+                </ion-option-button>
+                <ion-option-button ng-if="isMineShop() && !isOnShelve(product)"
+                    class="button-energized" ng-click="putOn(product)">
+                    上架
+                </ion-option-button>
+            </ion-item>
+            <ion-item class="padding text-center" ng-if="!products">
+                <h3>加载中...</h3>
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+</ion-view>

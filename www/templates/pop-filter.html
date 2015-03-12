@@ -1,0 +1,77 @@
+<div class="filt-view" ng-show="openFilter">
+    <ion-scroll zooming="true" direction="y" style="height:300px">
+
+        <!-- 按地区筛选 -->
+        <div ng-if="curFilterType=='area'" class="filt-open filt-show">
+            <div class="wrapper box-flex1 bg-white">
+                <ul>
+                    <li ng-class="{active:(filterState.selectedArea.id == areaTree.id)}"
+                        ng-click="selectArea(areaTree)">
+                        <a>全{{areaTree.name}}</a>
+                    </li>
+                    <li ng-repeat="district in areaTree.children"
+                        ng-class="{active:(filterState.selectedArea.id == district.id)}"
+                        ng-click="selectArea(district)">
+                        <a>{{district.name}}</a>
+                        <!--i class="filt-arrow"></i-->
+                    </li>
+                </ul>
+            </div>
+            <div ng-if="pop_streets" class="wrapper box-flex1 bg-gray">
+                <ul>
+                    <li><a>全{{areaTree.district}}</a></li>
+                    <li ng-repeat="street in pop_streets"
+                        ng-click="goto(c_street)">
+                        <a>{{street}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 分类筛选 -->
+        <div ng-if="curFilterType=='category'" class="filt-open filt-show">
+            <div class="wrapper box-flex1 bg-white">
+                <ul>
+                    <li ng-class="{active: (!filterState.selectedCategory)}"
+                        ng-click="selectCategory(null)">
+                        <a>全部</a>
+                    </li>
+                    <li ng-repeat="c in categories"
+                        ng-class="{active: isCategorySelected(c)}"
+                        ng-click="selectCategory(c)">
+                        <a>{{c.name}}</a>
+                        <!--i class="filt-arrow"></i-->
+                    </li>
+                </ul>
+            </div>
+            <div ng-if="filterState.selectedCategoriesTrack[0].children.length"
+                class="wrapper box-flex1 bg-gray">
+                <ul>
+                    <li ng-class="{active: (!filterState.selectedCategoriesTrack[1])}"
+                        ng-click="selectCategory(filterState.selectedCategoriesTrack[0], true)">
+                        <a>全部{{filterState.selectedCategoriesTrack[0].name}}</a>
+                    </li>
+                    <li ng-repeat="c in filterState.selectedCategoriesTrack[0].children"
+                        ng-class="{active: isCategorySelected(c)}"
+                        ng-click="selectCategory(c)">
+                        <a>{{c.name}}</a>
+                        <!--i class="filt-arrow"></i-->
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 排序 -->
+        <div ng-if="curFilterType=='ordering'" class="filt-open filt-show">
+            <div class="wrapper box-flex1 bg-white">
+                <ul>
+                    <li ng-repeat="ordering in orderingOptions"
+                        ng-class="{active:filterState.selectedOrdering == ordering}"
+                        ng-click="selectOrdering(ordering)">
+                        <a href="">{{ordering.name}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </ion-scroll>
+</div>

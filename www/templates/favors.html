@@ -1,0 +1,20 @@
+<ion-view view-title="我的收藏">
+    <ion-content class="has-header">
+        <ion-list>
+            <ion-item class="mama-item" collection-repeat="product in products"
+                collection-item-width="'100%'" collection-item-height="'120px'">
+                <ng-include src="'templates/snippets/product-overview.html'"></ng-include>
+                <ion-option-button class="button-energized" ng-click="removeFavor(product)">
+                    移除收藏
+                </ion-option-button>
+            </ion-item>
+            <ion-item class="padding text-center" ng-if="!products">
+                <h3>加载中...</h3>
+            </ion-item>
+            <ion-item class="padding text-center" ng-if="products && !products.length">
+                <h3>暂无收藏</h3>
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+</ion-view>

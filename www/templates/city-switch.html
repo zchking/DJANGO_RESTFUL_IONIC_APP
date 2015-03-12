@@ -1,0 +1,29 @@
+<ion-modal-view>
+    <div class="bar bar-header item-input-inset">
+        <button type="button" class="button button-clear" ng-click="deactivateCitySwitch()"><i class="icon ion-ios-arrow-back"></i></button>
+
+        <label class="item-input-wrapper">
+            <i class="icon ion-ios-search placeholder-icon"></i>
+            <input type="search" placeholder="请输入城市关键词" ng-model="ctrlData.searchText">
+        </label>
+
+        <!--button class="button button-clear button-energized">
+            搜索
+        </button-->
+
+    </div>
+    <div class="filt-view">
+        <ion-scroll zooming="true" direction="y" style="height:400px">
+            <div class="filt-open filt-show">
+                <div class="wrapper box-flex1 bg-white">
+                    <ul>
+                        <li ng-repeat="city in cities" ng-class="{active: city == currentCity}"
+                            ng-click="selectCity(city)">
+                            <a>{{city.name}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </ion-scroll>
+    </div>
+</ion-modal-view>

@@ -1,0 +1,30 @@
+<ion-view view-title="{{user.username||'我的'}}">
+    <ion-nav-buttons side="secondary">
+        <button class="button icon icon-right ion-plus-circled" ui-sref="tab.add-product">上架新品</button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header">
+        <ion-list>
+            <ion-item ui-sref="account.detail">
+                <i class="positive icon ion-person"></i>
+                我的信息
+            </ion-item>
+
+            <!-- 店铺+产品列举&管理 -->
+            <ion-item ui-sref="shop({id:user.id})">
+                <i class="positive icon ion-grid"></i>
+                我的盘子
+            </ion-item>
+
+            <ion-item ui-sref="favors">
+                <i class="positive icon ion-star"></i>
+                我的收藏
+            </ion-item>
+
+            <ion-item ui-sref="account.set-password">
+                <i class="positive icon ion-locked"></i>
+                修改密码
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

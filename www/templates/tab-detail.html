@@ -1,0 +1,73 @@
+<ion-view view-title="{{ product.title||'宝贝详情' }}">
+    <ion-nav-buttons side="left">
+        <button class="button icon icon-left ion-ios-arrow-back"
+            ng-if="isTopOfCurrentHistory()" ui-sref="tab.products">宝库寻宝
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header">
+        <ion-slide-box does-continue="true" on-slide-changed="slideHasChanged($index)"
+            does-continue=true auto-play=true slide-interval=3000>
+            <ion-slide ng-repeat="image in product.images">
+                <div class="thumb-houseimg-box"><img ng-src="{{productImageURLPrefix}}{{image}}"></div>
+            </ion-slide>
+        </ion-slide-box>
+
+
+        <div class="detail-p01 clear">
+            <h1 class="title pull-left">
+                <span class="energized">¥{{product.price|number:2}}</span>
+                <span class="cancel-line f12 dark">¥{{product.cost|number:2}}</span>
+            </h1>
+            <div class="f12 pull-right">{{product.pubdate|date:"yyyy-MM-dd HH:mm"}}</div>
+        </div>
+
+        <div class="comm-area">
+            <div class="contact-info clear">
+                <a class="pull-left energized" ui-sref="shop({id:product.owner.id})">{{product.owner.username}}</a>
+                <a class="pull-right f12" ng-href="">
+                    <span ng-if="product.address.parent">{{product.address.parent.name}} -</span>
+                    {{product.address.name}}
+                </a>
+            </div>
+            <p>
+                <span class="fca3 lh30">物品描述：</span>
+                {{product.title}}；
+                {{product.source}}；
+                {{product.oldornew}}；
+                <span ng-if="product.qgp">保质期：{{product.qgp}}；</span>
+                {{product.brand}}；
+                {{product.hascert? '有': '无'}}凭证；
+                {{product.reason}}。
+            </p>
+        </div>
+    </ion-content>
+
+    <ion-footer-bar align-title="left" class="bar-stable">
+        <button ng-if="user" ng-class="{button:true, icon:true, 'button-energized': true, 'button-clear': true,
+            'ion-star':isFavored(),
+            'ion-ios-star-outline':!isFavored()}"
+            ng-click="isFavored()? removeFavor(): addFavor()">
+        </button>
+
+        <a class="padding-horizontal" ng-href="tel:{{product.owner.phone_number}}">
+            <button class="button button-clear button-energized icon ion-ios-telephone-outline"></button>
+        </a>
+
+        <span class="padding-horizontal">
+            <button class="button button-clear button-energized icon ion-share" ng-click="openShare()"></button>
+        </span>
+
+        <span class="padding-horizontal">
+            <button class="button button-clear button-energized icon ion-wechat" ng-click="showAddWechatTip()"></button>
+        </span>
+    </ion-footer-bar>
+</ion-view>
+
+<script id="share-weixin.html" type="text/ng-template">
+<ion-modal-view class="weixin-share-container">
+    <ion-content ng-click="closeShare()">
+        <p class="tip-text">点击右上角“...”，<br>发送给朋友或分享到朋友圈吧！</p>
+    </ion-content>
+</ion-modal-view>
+</script>
